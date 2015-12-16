@@ -9,12 +9,16 @@ var input = `((((()(()(((((((()))(((()((((()())(())()(((()((((((()((()(()(((()((
 
 func main() {
 	floor := 0
-	for _, char := range strings.Split(input, "") {
+	for i, char := range strings.Split(input, "") {
 		switch char {
 		case "(":
 			floor += 1
 		case ")":
 			floor -= 1
+		}
+
+		if floor == -1 {
+			fmt.Println("Santa, you're in the basement at position", i+1)
 		}
 	}
 
