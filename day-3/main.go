@@ -17,26 +17,39 @@ func main() {
 		fmt.Println("Error opening directions.txt", err)
 	}
 
-	current := Point{x: 0, y: 0}
+	santa := Point{x: 0, y: 0}
+	roboSanta := Point{x: 0, y: 0}
 	visits := make(map[Point]int)
-	visits[current] += 1
+	visits[santa] += 1
+	visits[roboSanta] += 1
+	santasTurn := true
 
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanRunes)
 	for scanner.Scan() {
-		switch scanner.Text() {
-		case "^":
-			current.y += 1
-		case ">":
-			current.x += 1
-		case "v":
-			current.y -= 1
-		case "<":
-			current.x -= 1
+		if santasTurn {
+			santa.move(scanner.Text())
+			visits[santa] += 1
+			santasTurn = false
+		} else {
+			roboSanta.move(scanner.Text())
+			visits[roboSanta] += 1
+			santasTurn = true
 		}
-
-		visits[current] += 1
 	}
 
-	fmt.Println("Santa, you've given", len(visits), "different houses presents.")
+	fmt.Println("Together, you've visited", len(visits), "houses")
+}
+
+func (point *Point) move(direction string) {
+	switch direction {
+	case "^":
+		point.y += 1
+	case ">":
+		point.x += 1
+	case "v":
+		point.y -= 1
+	case "<":
+		point.x -= 1
+	}
 }
