@@ -14,7 +14,7 @@ func main() {
 	for {
 		hash := fmt.Sprintf("%x", md5.Sum([]byte(secret+strconv.Itoa(candidate))))
 
-		if stringStartsWithZeros(5, hash) {
+		if stringStartsWithZeros(6, hash) {
 			fmt.Println("We did it!", candidate)
 			return
 		}
