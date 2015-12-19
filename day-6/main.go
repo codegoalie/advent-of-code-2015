@@ -27,6 +27,26 @@
 
 // After following the instructions, how many lights are lit?
 
+// --- Part Two ---
+
+// You just finish implementing your winning light pattern when you realize you
+// mistranslated Santa's message from Ancient Nordic Elvish.
+
+// The light grid you bought actually has individual brightness controls; each
+// light can have a brightness of zero or more. The lights all start at zero.
+
+// The phrase turn on actually means that you should increase the brightness of
+// those lights by 1.
+
+// The phrase turn off actually means that you should decrease the brightness of
+// those lights by 1, to a minimum of zero.
+
+// The phrase toggle actually means that you should increase the brightness of
+// those lights by 2.
+
+// What is the total brightness of all lights combined after following Santa's
+// instructions?
+
 package main
 
 import (
@@ -37,13 +57,32 @@ import (
 	"strings"
 )
 
+type light struct {
+	brightness int
+}
+
+func (l *light) on() {
+	l.brightness++
+}
+
+func (l *light) off() {
+	l.brightness--
+	if l.brightness < 0 {
+		l.brightness = 0
+	}
+}
+
+func (l *light) toggle() {
+	l.brightness += 2
+}
+
 func main() {
 	file, err := os.Open("configuration.txt")
 	if err != nil {
 		fmt.Println("Error opening configuration.txt", err)
 	}
 
-	var grid [1000][1000]bool
+	var grid [1000][1000]light
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -69,26 +108,24 @@ func main() {
 			for ii := startY; ii <= endY; ii++ {
 				switch words[0] {
 				case "on":
-					grid[i][ii] = true
+					grid[i][ii].on()
 				case "off":
-					grid[i][ii] = false
+					grid[i][ii].off()
 				case "toggle":
-					grid[i][ii] = !grid[i][ii]
+					grid[i][ii].toggle()
 				}
 			}
 		}
 
 	}
 
-	lightsOn := 0
+	totalBrightness := 0
 
 	for i := 0; i < 1000; i++ {
 		for ii := 0; ii < 1000; ii++ {
-			if grid[i][ii] {
-				lightsOn++
-			}
+			totalBrightness += grid[i][ii].brightness
 		}
 	}
 
-	fmt.Println("The ideal configuration has", lightsOn, "lights on.")
+	fmt.Println("The ideal configuration has", totalBrightness, "total brightness.")
 }
