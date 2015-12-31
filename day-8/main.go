@@ -52,6 +52,7 @@ func main() {
 
 	totalCodes := 0
 	totalChars := 0
+	totalQuotedCodes := 0
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -65,7 +66,10 @@ func main() {
 		} else {
 			totalChars += len(chars)
 		}
+
+		totalQuotedCodes += len(strconv.Quote(line))
 	}
 
 	fmt.Println("Santa, the difference between the codes and the characters is", totalCodes-totalChars)
+	fmt.Println("Santa, the difference between the new codes and the old codes is", totalQuotedCodes-totalCodes)
 }
