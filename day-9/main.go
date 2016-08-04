@@ -30,131 +30,58 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
+	"math"
 )
-
-type cartogram struct {
-	distances    map[string]int
-	destinations map[string]bool
-}
 
 func main() {
 	globe := parseMap("routes.txt")
 
 	size := len(globe.destinations)
-	perm(size, func(c []int) {
-		fmt.Println(c)
-	})
-
-	// for destination := range destinations {
-	// 	fmt.Printf("destination = %+v\n", destination)
-	// }
-
-	// fmt.Println(places)
-	// for route := range GenerateCombinations(places) {
-	// 	fmt.Println("Testing", route)
-	// 	distance := 0
-	// 	for i := 0; i < len(route)-1; i++ {
-	// 		d := distances[route[i]+route[i+1]]
-	// 		fmt.Println(route[i]+route[i+1], d)
-	// 		distance += d
-	// 	}
-	// 	if distance < shortestDistance {
-	// 		shortestDistance = distance
-	// 	}
-	// }
-
-	// fmt.Println("Santa, the shortest distance you can fly is", shortestDistance)
+	shortest := math.MaxInt64
+	for _, p := range perm(size) {
+		trial := 0
+		j := 1
+		for i := 0; i < len(p)-1; i++ {
+			origin := globe.destinations[p[i]]
+			destination := globe.destinations[p[j]]
+			trial += globe.distances[origin+destination]
+			j++
+		}
+		fmt.Printf("trial = %+v\n", trial)
+		fmt.Printf("shortest = %+v\n", shortest)
+		if trial < shortest {
+			shortest = trial
+		}
+	}
+	fmt.Printf("\n\nAnd the winner is...\n")
+	fmt.Printf("shortest = %+v\n", shortest)
 }
 
-// func GenerateCombinations(destinations []string) <-chan []string {
-// 	c := make(chan []string)
-// 	length := len(destinations)
-
-// 	go func(c chan []string) {
-// 		defer close(c)
-
-// 		AddDestination(c, []string{}, destinations, length)
-// 	}(c)
-
-// 	return c
-// }
-
-// func AddDestination(c chan []string, combo, destinations []string, length int) {
-// 	if length <= 0 {
-// 		return
-// 	}
-
-// 	var newCombo []string
-// 	for _, destination := range destinations {
-// 		fmt.Println("Adding", destination)
-// 		newCombo = append(combo, destination)
-// 		c <- newCombo
-// 		AddDestination(c, newCombo, destinations, length-1)
-// 	}
-// }
-
-func perm(n int, emit func([]int)) {
+func perm(n int) [][]int {
 	s := make([]int, n)
+	accrue := [][]int{}
+
 	for i := 0; i < n; i++ {
 		s[i] = i
 	}
 
-	emit(s)
+	return subPerm(n, s, accrue)
 
-	return
 }
 
-// func comb(n, m int, emit func([]int)) {
-// 	s := make([]int, m)
-// 	last := m - 1
-// 	var rc func(int, int)
-// 	rc = func(i, next int) {
-// 		for j := next; j < n; j++ {
-// 			s[i] = j
-// 			if i == last {
-// 				emit(s)
-// 			} else {
-// 				rc(i+1, j+1)
-// 			}
-// 		}
-// 		return
-// 	}
-// 	rc(0, 0)
-// }
-
-func newCartogram() cartogram {
-	return cartogram{
-		distances:    make(map[string]int),
-		destinations: make(map[string]bool),
-	}
-}
-
-func parseMap(filename string) cartogram {
-	file, err := os.Open(filename)
-	if err != nil {
-		fmt.Println("Error opening file:", filename, err)
-	}
-
-	globe := newCartogram()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := scanner.Text()
-
-		parts := strings.Split(line, " ")
-		distance, err := strconv.Atoi(parts[4])
-		if err != nil {
-			panic(err)
+func subPerm(n int, s []int, accrue [][]int) [][]int {
+	if n == 1 {
+		accrue = append(accrue, append([]int(nil), s...))
+	} else {
+		for i := 0; i < n; i++ {
+			accrue = subPerm(n-1, s, accrue)
+			if n%2 == 0 {
+				s[i], s[n-1] = s[n-1], s[i]
+			} else {
+				s[0], s[n-1] = s[n-1], s[0]
+			}
 		}
-		globe.distances[parts[0]+parts[2]] = distance
-		globe.destinations[parts[0]] = true
-		globe.destinations[parts[2]] = true
 	}
-
-	return globe
+	return accrue
 }

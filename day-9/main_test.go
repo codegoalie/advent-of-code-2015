@@ -4,15 +4,23 @@ import "testing"
 
 func TestPerm(t *testing.T) {
 	cases := map[int][][]int{
-		1: [][]int{[]int{0}},
-		2: [][]int{[]int{0, 1}, []int{1, 0}},
+		1: {{0}},
+		2: {{0, 1}, {1, 0}},
+		3: {
+			{0, 1, 2}, {1, 0, 2},
+			{2, 0, 1}, {0, 2, 1},
+			{1, 2, 0}, {2, 1, 0},
+		},
+		4: {
+			{0, 1, 2, 3}, {1, 0, 2, 3}, {2, 0, 1, 3}, {0, 2, 1, 3}, {1, 2, 0, 3}, {2, 1, 0, 3},
+			{3, 1, 2, 0}, {1, 3, 2, 0}, {2, 3, 1, 0}, {3, 2, 1, 0}, {1, 2, 3, 0}, {2, 1, 3, 0},
+			{3, 0, 2, 1}, {0, 3, 2, 1}, {2, 3, 0, 1}, {3, 2, 0, 1}, {0, 2, 3, 1}, {2, 0, 3, 1},
+			{3, 0, 1, 2}, {0, 3, 1, 2}, {1, 3, 0, 2}, {3, 1, 0, 2}, {0, 1, 3, 2}, {1, 0, 3, 2},
+		},
 	}
 
 	for n, expected := range cases {
-		actual := [][]int{}
-		perm(n, func(s []int) {
-			actual = append(actual, s)
-		})
+		actual := perm(n)
 		if !deepCompareSlice(actual, expected) {
 			t.Errorf("perm(%d) = %+v, want %+v", n, actual, expected)
 		}
