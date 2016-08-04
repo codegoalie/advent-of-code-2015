@@ -29,16 +29,13 @@
 // What is the distance of the shortest route?
 package main
 
-import (
-	"fmt"
-	"math"
-)
+import "fmt"
 
 func main() {
 	globe := parseMap("routes.txt")
 
 	size := len(globe.destinations)
-	shortest := math.MaxInt64
+	longest := 0
 	for _, p := range perm(size) {
 		trial := 0
 		j := 1
@@ -49,13 +46,13 @@ func main() {
 			j++
 		}
 		fmt.Printf("trial = %+v\n", trial)
-		fmt.Printf("shortest = %+v\n", shortest)
-		if trial < shortest {
-			shortest = trial
+		fmt.Printf("longest = %+v\n", longest)
+		if trial > longest {
+			longest = trial
 		}
 	}
 	fmt.Printf("\n\nAnd the winner is...\n")
-	fmt.Printf("shortest = %+v\n", shortest)
+	fmt.Printf("longest = %+v\n", longest)
 }
 
 func perm(n int) [][]int {
