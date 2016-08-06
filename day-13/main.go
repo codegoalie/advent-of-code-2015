@@ -37,9 +37,11 @@ func main() {
 		seats[seat{s: splits[0], n: splits[10][:len(splits[10])-1]}] = modification
 	}
 
-	people := []string{}
+	people := []string{"me"}
 	for k := range subjects {
 		people = append(people, k)
+		seats[seat{s: "me", n: k}] = 0
+		seats[seat{s: k, n: "me"}] = 0
 	}
 
 	var best int
