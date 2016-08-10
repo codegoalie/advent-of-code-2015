@@ -109,6 +109,19 @@ func main() {
 						texture = 0
 					}
 
+					calories := ingredients["Sprinkles"].calories*i +
+						ingredients["Butterscotch"].calories*j +
+						ingredients["Chocolate"].calories*k +
+						ingredients["Candy"].calories*l
+
+					if calories < 0 {
+						calories = 0
+					}
+
+					if calories != 500 {
+						continue
+					}
+
 					score := texture * flavor * durability * capacity
 
 					if score > highScore {
