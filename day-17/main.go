@@ -39,6 +39,7 @@ func main() {
 			if sum == 150 {
 				count++
 				fmt.Printf("combo = %+v\n", combo)
+				return
 			}
 		}
 	}
