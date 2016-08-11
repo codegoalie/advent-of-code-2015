@@ -70,8 +70,15 @@ func main() {
 	for _, sue := range sues {
 		good := true
 		for attr, count := range sue.attrs {
-			if knowns[attr] != count {
-				good = false
+			switch attr {
+			case "cats", "trees":
+				good = knowns[attr] < count
+			case "pomeranians", "goldfish":
+				good = knowns[attr] > count
+			default:
+				good = knowns[attr] == count
+			}
+			if !good {
 				break
 			}
 		}
