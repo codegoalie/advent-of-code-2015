@@ -75,6 +75,10 @@ func main() {
 				}
 			}
 		}
+		newGrid[0][0] = true
+		newGrid[0][99] = true
+		newGrid[99][0] = true
+		newGrid[99][99] = true
 		grid = newGrid
 	}
 
