@@ -6,8 +6,7 @@ import (
 )
 
 func main() {
-	var i, house, last, target, presents, maxPresents int64
-	last = 1
+	var house, target, presents, maxPresents int64
 	house = 1
 	target = 29000000
 	for {
@@ -16,16 +15,9 @@ func main() {
 			maxPresents = presents
 		}
 		if presents >= target {
-			fmt.Printf("ALMOST THERE House %d got %d presents.\n", house, presents)
-			for i = last; i <= house; i++ {
-				presents = presentsAtHouse(i)
-				fmt.Printf("House %d got %d presents.\n", i, presents)
-				if presents >= target {
-					return
-				}
-			}
+			fmt.Printf("House %d got %d presents.\n", house, presents)
+			return
 		}
-		last = house
 
 		if math.Mod(float64(house), 10000) == 0 {
 			fmt.Printf("house = %+v\n", house)
@@ -37,11 +29,12 @@ func main() {
 
 func presentsAtHouse(house int64) int64 {
 	var i, presents int64
-	for i = 1; i <= house; i++ {
-		if math.Mod(float64(house), float64(i)) == 0 {
-			presents += i * 10
+	for i = 1; i <= (house/2)+1; i++ {
+		if i*50 >= house && math.Mod(float64(house), float64(i)) == 0 {
+			presents += i * 11
 		}
 	}
+	presents += house * 11
 
 	return presents
 }
