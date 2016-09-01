@@ -63,7 +63,7 @@ func main() {
 	rings := []item{
 		{name: "Damage +1", cost: 25, damage: 1},
 		{name: "Damage +2", cost: 50, damage: 2},
-		{name: "Damage +3", cost: 100, damage: 2},
+		{name: "Damage +3", cost: 100, damage: 3},
 		{name: "Defense +1", cost: 20, armor: 1},
 		{name: "Defense +2", cost: 40, armor: 2},
 		{name: "Defense +3", cost: 80, armor: 3},
@@ -71,7 +71,7 @@ func main() {
 		{name: "No ring left"},
 	}
 
-	leastGold := math.MaxInt32
+	mostGold := 0
 
 	for _, weapon := range weapons {
 
@@ -93,12 +93,12 @@ func main() {
 
 					cost := totalCost(inventory)
 
-					if leastGold > cost && playerWins(me, boss) {
+					if mostGold < cost && !playerWins(me, boss) {
 						fmt.Printf("inventory = %+v\n", inventory)
 						fmt.Printf("me = %+v\n", me)
 						fmt.Printf("cost = %+v\n", cost)
-						fmt.Printf("playerWins(me, boss) = %+v\n", true)
-						leastGold = cost
+						fmt.Printf("playerWins(me, boss) = %+v\n", false)
+						mostGold = cost
 					}
 				}
 			}
