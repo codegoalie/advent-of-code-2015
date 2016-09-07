@@ -154,7 +154,7 @@ func main() {
 		}
 	}
 
-	var c cpu
+	c := cpu{a: 1}
 
 	for i := 0; i < len(stack); {
 		frame := stack[i]
