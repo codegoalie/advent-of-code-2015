@@ -49,9 +49,9 @@ func main() {
 
 	candidates := [][]int{}
 
-	start := 4
+	start := 3
 	end := 14
-	thirdSum := 512
+	thirdSum := 384
 
 	//test
 	// start := 2
