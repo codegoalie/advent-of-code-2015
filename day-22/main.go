@@ -68,11 +68,12 @@ var spells = [5]spell{
 
 func main() {
 	lowestCost := math.MaxInt32
+	var maxMoves = float64(21)
 
-	for strategyMask := 0; strategyMask < 10077696; strategyMask++ {
+	for strategyMask := 0; strategyMask < int(math.Pow(6, maxMoves)); strategyMask++ {
 		boss := person{health: 55, damage: 8}
 		me := wizard{health: 50, mana: 500}
-		strategy := makeStrategy(strategyMask)
+		strategy := makeStrategy(strategyMask, maxMoves)
 		currentEffects := []spell{}
 		var round, totalCost int
 
@@ -151,11 +152,21 @@ func main() {
 			me.health -= boss.damage - me.armor
 
 			round++
+			if round > len(strategy)-1 {
+				fmt.Println("Oh no... I'm outta moves", strategy, round)
+				break
+			}
+			if totalCost > lowestCost {
+				break
+			}
 		}
 
 		if boss.health < 0 && me.health > 0 && totalCost < lowestCost {
 			lowestCost = totalCost
 			fmt.Printf("new lowestCost = %+v\n", lowestCost)
+			fmt.Printf("- Player has %d hit points, %d armor, %d mana\n", me.health, me.armor, me.mana)
+			fmt.Printf("- Boss has %d hit points\n", boss.health)
+			fmt.Printf("strategy = %+v\n", strategy)
 		}
 		// fmt.Println("\n\n GAME OVER")
 		// fmt.Printf("- Player has %d hit points, %d armor, %d mana\n", me.health, me.armor, me.mana)
@@ -196,12 +207,12 @@ func wearEffectOff(effect spell, boss *person, me *wizard) {
 
 }
 
-func makeStrategy(mask int) [9]int {
-	strategy := [9]int{}
-	for i := 0; i < 9; i++ {
+func makeStrategy(mask int, maxMoves float64) []int {
+	strategy := []int{}
+	for i := 0; i < int(maxMoves); i++ {
 		strategyforTurn := (mask % 6) - 1
 		mask /= 6
-		strategy[i] = strategyforTurn
+		strategy = append(strategy, strategyforTurn)
 	}
 
 	return strategy
